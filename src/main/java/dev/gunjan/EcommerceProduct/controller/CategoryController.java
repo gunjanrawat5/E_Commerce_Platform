@@ -20,12 +20,15 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<CategoryResponseDTO>> getAllCategories(){
+        List<CategoryResponseDTO> categoryResponseDTOList = categoryService.getAllCategories();
+        return ResponseEntity.ok(categoryResponseDTOList);
 
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponseDTO> getCategoryById(@PathVariable("id")UUID categoryId){
-
+        CategoryResponseDTO categoryResponseDTO = categoryService.getCategory(categoryId);
+        return ResponseEntity.ok(categoryResponseDTO);
     }
 
     @PostMapping
@@ -40,7 +43,7 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteCategory(@PathVariable("id") UUID categoryId){
-
+        return ResponseEntity.ok(categoryService.deleteCategory(categoryId));
     }
 
 }

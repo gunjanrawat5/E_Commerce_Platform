@@ -3,10 +3,14 @@ package dev.gunjan.EcommerceProduct.service;
 import dev.gunjan.EcommerceProduct.dto.CategoryResponseDTO;
 import dev.gunjan.EcommerceProduct.dto.CreateCategoryRequestDTO;
 import dev.gunjan.EcommerceProduct.dto.CreateProductRequestDTO;
+import dev.gunjan.EcommerceProduct.entity.Category;
+import dev.gunjan.EcommerceProduct.exception.CategoryNotFoundException;
+import dev.gunjan.EcommerceProduct.mapper.CategoryEntityDTOMapper;
 import dev.gunjan.EcommerceProduct.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,17 +22,26 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponseDTO getCategory(UUID categoryId) {
-        return null;
+        Category category = categoryRepository.findById(categoryId).orElseThrow(
+                () -> new CategoryNotFoundException("Category with given id not found")
+        );
+        return CategoryEntityDTOMapper.convertCategoryToCategoryResponseDTO(category);
     }
 
     @Override
     public List<CategoryResponseDTO> getAllCategories() {
-        return List.of();
+        List<Category> categories = categoryRepository.findAll();
+        List<CategoryResponseDTO> categoryResponseDTOS = new ArrayList<>();
+        for(Category category : categories){
+            categoryResponseDTOS.add(CategoryEntityDTOMapper.convertCategoryToCategoryResponseDTO(category));
+        }
+        return  categoryResponseDTOS;
     }
 
     @Override
     public CategoryResponseDTO createCategory(CreateCategoryRequestDTO createCategoryRequestDTO) {
         return null;
+
     }
 
     @Override
@@ -38,6 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public boolean deleteCategory(UUID categoryId) {
-        return false;
+        categoryRepository.deleteById(categoryId);
+        return true;
     }
 }
