@@ -1,5 +1,7 @@
 package dev.gunjan.EcommerceProduct.controller;
 
+import dev.gunjan.EcommerceProduct.dto.CreateProductRequestDTO;
+import dev.gunjan.EcommerceProduct.dto.ProductResponseDTO;
 import dev.gunjan.EcommerceProduct.entity.Product;
 import dev.gunjan.EcommerceProduct.exception.ProductNotFoundException;
 import dev.gunjan.EcommerceProduct.service.ProductService;
@@ -20,29 +22,27 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Product>> getAllProducts(){
-        return  ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts(){
+        List<ProductResponseDTO> products = productService.getAllProducts();
+        return  ResponseEntity.ok(products);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id")UUID id){
+    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable("id")UUID id){
         if(id == null){
             throw new ProductNotFoundException("Product with given id does not exist");
         }
-        Product product = productService.getProduct(id);
-        return ResponseEntity.ok(product);
+        return ResponseEntity.ok(productService.getProduct(id));
     }
 
     @PostMapping("/")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product){
-        Product savedProduct = productService.createProduct(product);
-        return  ResponseEntity.ok(savedProduct);
+    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody CreateProductRequestDTO productRequestDTO){
+        return ResponseEntity.ok(productService.createProduct(productRequestDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable("id") UUID id, @RequestBody Product product){
-        Product updatedProduct = productService.updateProduct(product, id);
-        return ResponseEntity.ok(updatedProduct);
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable("id") UUID id, @RequestBody CreateProductRequestDTO productRequestDTO){
+        return ResponseEntity.ok( productService.updateProduct(productRequestDTO, id));
     }
 
     @DeleteMapping("/{id}")
@@ -51,7 +51,7 @@ public class ProductController {
     }
 
     @GetMapping("/name/{productName}")
-    public ResponseEntity<Product> getProductByProductName(@PathVariable("productName") String productName){
+    public ResponseEntity<ProductResponseDTO> getProductByProductName(@PathVariable("productName") String productName){
         return ResponseEntity.ok(productService.getProduct(productName));
     }
 
