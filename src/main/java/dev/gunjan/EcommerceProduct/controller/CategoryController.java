@@ -33,17 +33,23 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<CategoryResponseDTO> createCategory(@RequestBody CreateCategoryRequestDTO createCategoryRequestDTO){
-
+        return ResponseEntity.ok(categoryService.createCategory(createCategoryRequestDTO));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponseDTO> updateCategory(@PathVariable("id") UUID categoryId, @RequestBody CreateCategoryRequestDTO createCategoryRequestDTO){
-
+        return ResponseEntity.ok(categoryService.updateCategory(createCategoryRequestDTO, categoryId));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteCategory(@PathVariable("id") UUID categoryId){
         return ResponseEntity.ok(categoryService.deleteCategory(categoryId));
+    }
+
+    // fetches all products for given category id and returns sum of their prices
+    @GetMapping("/totalPrice/{categoryId}")
+    public ResponseEntity<Double> getTotalPriceForAllProducts(@PathVariable("categoryId")UUID categoryId){
+        return ResponseEntity.ok(categoryService.getTotalPriceForCategory(categoryId));
     }
 
 }

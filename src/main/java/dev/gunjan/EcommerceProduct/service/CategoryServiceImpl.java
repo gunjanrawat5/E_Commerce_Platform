@@ -4,6 +4,7 @@ import dev.gunjan.EcommerceProduct.dto.CategoryResponseDTO;
 import dev.gunjan.EcommerceProduct.dto.CreateCategoryRequestDTO;
 import dev.gunjan.EcommerceProduct.dto.CreateProductRequestDTO;
 import dev.gunjan.EcommerceProduct.entity.Category;
+import dev.gunjan.EcommerceProduct.entity.Product;
 import dev.gunjan.EcommerceProduct.exception.CategoryNotFoundException;
 import dev.gunjan.EcommerceProduct.mapper.CategoryEntityDTOMapper;
 import dev.gunjan.EcommerceProduct.repository.CategoryRepository;
@@ -40,18 +41,37 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponseDTO createCategory(CreateCategoryRequestDTO createCategoryRequestDTO) {
+
         return null;
 
     }
 
     @Override
-    public CategoryResponseDTO updateCategory(CreateProductRequestDTO createProductRequestDTO, UUID categoryId) {
+    public CategoryResponseDTO updateCategory(CreateCategoryRequestDTO createCategoryRequestDTO, UUID categoryId) {
         return null;
     }
+
 
     @Override
     public boolean deleteCategory(UUID categoryId) {
         categoryRepository.deleteById(categoryId);
         return true;
+    }
+
+    @Override
+    public double getTotalPriceForCategory(UUID categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(
+                () -> new CategoryNotFoundException("Category for given id is not found")
+        );
+        if(category.getProducts().isEmpty()){
+            return 0;
+        }
+        else{
+            double sum  = 0;
+            for(Product p : category.getProducts()){
+                sum = sum + p.getPrice();
+            }
+            return sum;
+        }
     }
 }
